@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { UserI } from './interface/user.interface';
 
 @Injectable()
@@ -8,7 +8,31 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: Model<UserI>) {}
 
   async getAllUsers(): Promise<UserI[]> {
-    const users = await this.userModel.find();
+    const users = await this.userModel
+      .find()
+      .populate('role_id')
+      .populate('areas');
+    return users;
+  }
+
+  async getUsersByRole(role_id: string): Promise<UserI[]> {
+    const users = await this.userModel
+      .find({ role_id })
+      .populate('role_id')
+      .populate('areas');
+    return users;
+  }
+
+  async getUsersByArea(area_id: string): Promise<UserI[]> {
+    const users = await this.userModel.aggregate([
+      {
+        $match: {
+          areas: {
+            $in: [area_id],
+          },
+        },
+      },
+    ]);
     return users;
   }
 
@@ -21,6 +45,11 @@ export class UserService {
       birthdate,
       address,
       phone,
+      parent_phone,
+      pharmacyadmin,
+      centeradmin,
+      areas,
+      role_id,
     } = user;
     const newUser = new this.userModel({
       first_name,
@@ -30,13 +59,21 @@ export class UserService {
       birthdate,
       address,
       phone,
+      parent_phone,
+      pharmacyadmin,
+      centeradmin,
+      areas,
+      role_id,
     });
     await newUser.save();
     return newUser;
   }
 
   async getOneUser(id: string): Promise<any> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel
+      .findById(id)
+      .populate('role_id')
+      .populate('areas');
     return {
       user,
     };

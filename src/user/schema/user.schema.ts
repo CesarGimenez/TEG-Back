@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
+import mongoose, { Document, Schema as MongooseSchema } from 'mongoose';
+import { Area } from 'src/area/schema/area.schema';
+import { Role } from '../../role/schema/role.schema';
 @Schema()
-export class User {
+export class User extends Document {
   @Prop({ required: true })
   first_name: string;
 
@@ -29,23 +31,26 @@ export class User {
   @Prop({ default: false })
   is_Admin: boolean;
 
-  @Prop()
+  @Prop({ default: '' })
   parent_phone: string;
 
-  @Prop()
+  @Prop({ default: '' })
   secret_word: string;
 
-  @Prop()
+  @Prop({ default: '' })
   blood_group: string;
 
-  @Prop()
+  @Prop({ default: '' })
   centeradmin: string;
 
-  @Prop()
+  @Prop({ default: '' })
   pharmacyadmin: string;
 
-  @Prop()
-  areas: string[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Area' }] })
+  areas: Area[];
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Role' })
+  role_id: Role;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

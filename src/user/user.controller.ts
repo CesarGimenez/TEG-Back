@@ -26,15 +26,23 @@ export class UserController {
     });
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Agregar un nuevo usuario' })
-  @ApiBody({
-    type: userDTO,
-  })
-  async createUser(@Res() res, @Body() createUser: userDTO) {
-    const user = await this.userService.createUser(createUser);
-    return res.json({
-      user,
+  @Get('/role/:id')
+  @ApiOperation({ summary: 'Traerse a los usuarios segun su rol' })
+  @ApiParam({ name: 'id', description: 'id del rol' })
+  async getUsersByRole(@Res() res, @Param('id') role_id) {
+    const data = await this.userService.getUsersByRole(role_id);
+    return res.status(HttpStatus.OK).json({
+      data,
+    });
+  }
+
+  @Get('/area/:id')
+  @ApiOperation({ summary: 'Traerse a los usuarios segun su area' })
+  @ApiParam({ name: 'id', description: 'id del area' })
+  async getUsersByArea(@Res() res, @Param('id') area_id) {
+    const data = await this.userService.getUsersByArea(area_id);
+    return res.status(HttpStatus.OK).json({
+      data,
     });
   }
 
@@ -43,6 +51,18 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'id del usuario' })
   async getOneUser(@Res() res, @Param('id') id) {
     const user = await this.userService.getOneUser(id);
+    return res.json({
+      user,
+    });
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Agregar un nuevo usuario' })
+  @ApiBody({
+    type: userDTO,
+  })
+  async createUser(@Res() res, @Body() createUser: userDTO) {
+    const user = await this.userService.createUser(createUser);
     return res.json({
       user,
     });

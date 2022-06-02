@@ -34,11 +34,25 @@ export class userDTO {
   @ApiProperty()
   secret_word: string;
 
+  @ApiProperty()
   blood_group: string;
+
+  @ApiProperty()
   parent_phone: string;
+
   active: boolean;
   is_admin: boolean;
+
+  @ApiProperty()
   areas: string[];
+
+  @ApiProperty()
   centeradmin: string;
+
+  @ApiProperty()
   pharmacyadmin: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  role_id: string;
 }
