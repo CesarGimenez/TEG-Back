@@ -10,6 +10,10 @@ export class userDTO {
   last_name: string;
 
   @IsNotEmpty()
+  @ApiProperty()
+  dni: string;
+
+  @IsNotEmpty()
   @IsEmail()
   @ApiProperty()
   email: string;

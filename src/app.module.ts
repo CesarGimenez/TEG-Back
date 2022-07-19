@@ -7,6 +7,12 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoleModule } from './role/role.module';
 import { AreaModule } from './area/area.module';
+import { DiseaseModule } from './disease/disease.module';
+import { MedicineModule } from './medicine/medicine.module';
+import { PharmacyModule } from './pharmacy/pharmacy.module';
+import { HealthcenterModule } from './healthcenter/healthcenter.module';
+import { DiagnosticModule } from './diagnostic/diagnostic.module';
+import { AttachmentModule } from './attachment/attachment.module';
 
 @Module({
   imports: [
@@ -18,6 +24,12 @@ import { AreaModule } from './area/area.module';
     ),
     RoleModule,
     AreaModule,
+    DiseaseModule,
+    MedicineModule,
+    PharmacyModule,
+    HealthcenterModule,
+    DiagnosticModule,
+    AttachmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
