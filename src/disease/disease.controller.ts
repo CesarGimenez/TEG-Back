@@ -8,17 +8,27 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
 import { DiseaseService } from './disease.service';
 import { DiseaseDTO } from './dto/disease.dto';
 
+@ApiBearerAuth()
 @ApiTags('Diseases')
 @Controller('disease')
 export class DiseaseController {
   constructor(private diseaseService: DiseaseService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getAllDiseases(@Res() res) {
     const data = await this.diseaseService.getAllDiseases();
     return res.status(HttpStatus.OK).json({
@@ -26,6 +36,7 @@ export class DiseaseController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'id de la enfermdad' })
   async getOneDisease(@Res() res, @Param('id') id) {
@@ -35,6 +46,7 @@ export class DiseaseController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Agregar una nueva enfermedad' })
   @ApiBody({
@@ -47,6 +59,7 @@ export class DiseaseController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @ApiOperation({ summary: 'Editar una enfermedad' })
   @ApiBody({
@@ -64,6 +77,7 @@ export class DiseaseController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @ApiOperation({ summary: 'Eliminar una enfermedad' })
   @ApiParam({ name: 'id', description: 'id de la enfermedad' })

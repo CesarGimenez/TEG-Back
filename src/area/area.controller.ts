@@ -8,17 +8,27 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
 import { AreaService } from './area.service';
 import { areaDTO } from './dto/area.dto';
 
+@ApiBearerAuth()
 @ApiTags('Areas')
 @Controller('area')
 export class AreaController {
   constructor(private areaService: AreaService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getAllAreas(@Res() res) {
     const data = await this.areaService.getAllAreas();
     return res.status(HttpStatus.OK).json({
@@ -26,6 +36,7 @@ export class AreaController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Agregar una nueva area (especialidad)' })
   @ApiBody({
@@ -38,6 +49,7 @@ export class AreaController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @ApiOperation({ summary: 'Editar un area (especialidad)' })
   @ApiBody({
@@ -51,6 +63,7 @@ export class AreaController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @ApiOperation({ summary: 'Eliminar una area (especialidad)' })
   @ApiParam({ name: 'id', description: 'id del area' })

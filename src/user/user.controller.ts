@@ -18,17 +18,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { passwordDTO } from './dto/password.dto';
 import { userDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async getAllUsers(@Res() res) {
     const data = await this.userService.getAllUsers();
     return res.status(HttpStatus.OK).json({
@@ -55,6 +56,17 @@ export class UserController {
     const data = await this.userService.getUsersByArea(area_id);
     return res.status(HttpStatus.OK).json({
       data,
+    });
+  }
+
+  @Get('/disease/:id')
+  @ApiOperation({ summary: 'Traerse a los usuarios segun si ven enfermedad' })
+  @ApiParam({ name: 'id', description: 'id de la enfermedad' })
+  @UseGuards(JwtAuthGuard)
+  async getUsersByDisease(@Res() res, @Param('id') disease_id) {
+    const doctors = await this.userService.getDoctorsByDisease(disease_id);
+    return res.status(HttpStatus.OK).json({
+      doctors,
     });
   }
 
@@ -104,6 +116,20 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async updateUser(@Res() res, @Param('id') id, @Body() updateUser: userDTO) {
     const data = await this.userService.updateUser(id, updateUser);
+    return res.json({
+      data,
+    });
+  }
+
+  @Put('changepass/:id')
+  @ApiOperation({ summary: 'Editar clave de ingreso del usuario' })
+  @ApiParam({ name: 'id', description: 'id del usuario' })
+  @ApiBody({
+    type: passwordDTO,
+  })
+  @UseGuards(JwtAuthGuard)
+  async updatePassword(@Res() res, @Param('id') id, @Body() body: passwordDTO) {
+    const data = await this.userService.changePassword(id, body);
     return res.json({
       data,
     });

@@ -8,17 +8,27 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
 import { PharmacyDTO } from './dto/pharmacy.dto';
 import { PharmacyService } from './pharmacy.service';
 
+@ApiBearerAuth()
 @ApiTags('Pharmacy')
 @Controller('pharmacy')
 export class PharmacyController {
   constructor(private pharmacyService: PharmacyService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getAll(@Res() res) {
     const data = await this.pharmacyService.getAll();
     return res.status(HttpStatus.OK).json({
@@ -27,6 +37,7 @@ export class PharmacyController {
   }
 
   @Get('/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'id', description: 'id de farmacia' })
   async getOne(@Res() res, @Param('id') id) {
     const data = await this.pharmacyService.getOne(id);
@@ -36,6 +47,7 @@ export class PharmacyController {
   }
 
   @Get('/medicine/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Traerse farmacias segun medicina' })
   @ApiParam({ name: 'id', description: 'id del medicamento' })
   async getUsersByArea(@Res() res, @Param('id') medicine_id) {
@@ -46,6 +58,7 @@ export class PharmacyController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Agregar nueva farmacia' })
   @ApiBody({
     type: PharmacyDTO,

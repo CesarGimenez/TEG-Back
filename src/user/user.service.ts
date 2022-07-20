@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
+import { hash } from 'bcrypt';
 import { UserI } from './interface/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<UserI>) {}
+  constructor(
+    @InjectModel('User') private userModel: Model<UserI>,
+    @InjectModel('Disease') private diseaseModel: Model<any>,
+  ) {}
 
   async findOneByEmail(email: string): Promise<UserI | undefined> {
     return this.userModel.findOne({ email });
@@ -88,6 +92,85 @@ export class UserService {
     return users;
   }
 
+  async getDoctorsByDisease(disease_id: string): Promise<any> {
+    const area_disease = await this.diseaseModel.aggregate([
+      {
+        $project: {
+          _id: {
+            $convert: {
+              input: '$_id',
+              to: 'string',
+            },
+          },
+          areas: 1,
+        },
+      },
+      {
+        $match: {
+          _id: disease_id,
+        },
+      },
+      {
+        $project: {
+          areas: {
+            $map: {
+              input: '$areas',
+              as: 'area',
+              in: { $toString: '$$area' },
+            },
+          },
+          _id: 0,
+        },
+      },
+    ]);
+    const { areas } = area_disease[0];
+    const doctors = await this.userModel.aggregate([
+      {
+        $match: {
+          areas: {
+            $in: areas,
+          },
+        },
+      },
+      {
+        $project: {
+          name: { $concat: ['$first_name', ' ', '$last_name'] },
+          phone: 1,
+          email: 1,
+          role_id: 1,
+          areas: {
+            $map: {
+              input: '$areas',
+              as: 'a',
+              in: {
+                $toObjectId: '$$a',
+              },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'areas',
+          let: {
+            a: '$areas',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ['$_id', '$$a'],
+                },
+              },
+            },
+          ],
+          as: 'areas',
+        },
+      },
+    ]);
+    return doctors;
+  }
+
   async getOneUser(id: string): Promise<any> {
     const user = await this.userModel
       .findById(id)
@@ -109,47 +192,42 @@ export class UserService {
   }
 
   async createUser(user: any): Promise<UserI> {
-    const {
-      first_name,
-      last_name,
-      dni,
-      email,
-      password,
-      birthdate,
-      address,
-      phone,
-      parent_phone,
-      pharmacyadmin,
-      centeradmin,
-      areas,
-      role_id,
-    } = user;
-    const newUser = new this.userModel({
-      first_name,
-      last_name,
-      dni,
-      email,
-      password,
-      birthdate,
-      address,
-      phone,
-      parent_phone,
-      pharmacyadmin,
-      centeradmin,
-      areas,
-      role_id,
-    });
+    const { password } = user;
+    const hashPassword = await hash(password, 10);
+    user = { ...user, password: hashPassword };
+    const newUser = new this.userModel(user);
     await newUser.save();
     return newUser;
   }
 
   async updateUser(id: string, body: any): Promise<any> {
+    const { password } = body;
+    const hashPassword = await hash(password, 10);
+    body = { ...body, password: hashPassword };
     const user = await this.userModel.findByIdAndUpdate(id, body, {
       new: true,
     });
     return {
       user,
     };
+  }
+
+  async changePassword(id: string, body: any): Promise<any> {
+    const { password, confirmPassword } = body;
+    if (password === confirmPassword) {
+      const hashPassword = await hash(password, 10);
+      body = { ...body, password: hashPassword };
+      const user = await this.userModel.findByIdAndUpdate(id, body, {
+        new: true,
+      });
+      return {
+        user,
+      };
+    } else {
+      return {
+        msg: 'Las contrase;as no coinciden',
+      };
+    }
   }
 
   async deleteUser(id: string): Promise<any> {

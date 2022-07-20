@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -17,9 +18,8 @@ export class AuthService {
     const { email, password } = user;
     const data = await this.usersService.findOneByEmail(email);
     if (!data) throw new HttpException('INVALID_CREDENTIALS', 403);
-    if (data.password !== password) {
-      throw new HttpException('INVALID_CREDENTIALS', 403);
-    }
+    const checkPassword = await compare(password, data.password);
+    if (!checkPassword) throw new HttpException('INVALID_CREDENTIALS', 403);
     const payload = { name: user.first_name, id: user._id, email: user.email };
 
     return {
@@ -40,7 +40,6 @@ export class AuthService {
         token: cookie,
       };
     } catch (error) {
-      console.log(error);
       throw new UnauthorizedException();
     }
   }

@@ -8,17 +8,27 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
 import { roleDTO } from './dto/role.dto';
 import { RoleService } from './role.service';
 
+@ApiBearerAuth()
 @ApiTags('Roles')
 @Controller('role')
 export class RoleController {
   constructor(private roleService: RoleService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getAllRoles(@Res() res) {
     const data = await this.roleService.getAllRoles();
     return res.status(HttpStatus.OK).json({
@@ -27,6 +37,7 @@ export class RoleController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Agregar un nuevo rol' })
   @ApiBody({
     type: roleDTO,
@@ -39,6 +50,7 @@ export class RoleController {
   }
 
   @Put('/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Editar los datos de un rol' })
   @ApiParam({ name: 'id', description: 'id del rol' })
   @ApiBody({
@@ -52,6 +64,7 @@ export class RoleController {
   }
 
   @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Eliminar un rol' })
   @ApiParam({ name: 'id', description: 'id del rol' })
   async deleteRole(@Res() res, @Param('id') id) {
