@@ -31,65 +31,68 @@ export class UserService {
     return users;
   }
 
-  async getUsersByArea(area_id: string): Promise<UserI[]> {
-    const users = await this.userModel.aggregate([
-      {
-        $match: {
-          areas: {
-            $in: [area_id],
-          },
-        },
-      },
-      {
-        $project: {
-          name: { $concat: ['$first_name', ' ', '$last_name'] },
-          phone: 1,
-          email: 1,
-          role_id: 1,
-          areas: {
-            $map: {
-              input: '$areas',
-              as: 'a',
-              in: {
-                $toObjectId: '$$a',
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: 'areas',
-          let: {
-            a: '$areas',
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $in: ['$_id', '$$a'],
-                },
-              },
-            },
-          ],
-          as: 'areas',
-        },
-      },
-      {
-        $lookup: {
-          from: 'roles',
-          localField: 'role_id',
-          foreignField: '_id',
-          as: 'role',
-        },
-      },
-      {
-        $unwind: {
-          path: '$role',
-        },
-      },
-    ]);
-    return users;
+  async getUsersByArea(area_id: string): Promise<any> {
+    const users2 = await this.userModel
+      .find({ areas: { $in: [area_id] } })
+      .populate('areas role_id');
+    // const users = await this.userModel.aggregate([
+    //   {
+    //     $match: {
+    //       areas: {
+    //         $in: [area_id],
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       name: { $concat: ['$first_name', ' ', '$last_name'] },
+    //       phone: 1,
+    //       email: 1,
+    //       role_id: 1,
+    //       areas: {
+    //         $map: {
+    //           input: '$areas',
+    //           as: 'a',
+    //           in: {
+    //             $toObjectId: '$$a',
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'areas',
+    //       let: {
+    //         a: '$areas',
+    //       },
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: {
+    //               $in: ['$_id', '$$a'],
+    //             },
+    //           },
+    //         },
+    //       ],
+    //       as: 'areas',
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'roles',
+    //       localField: 'role_id',
+    //       foreignField: '_id',
+    //       as: 'role',
+    //     },
+    //   },
+    //   {
+    //     $unwind: {
+    //       path: '$role',
+    //     },
+    //   },
+    // ]);
+    return users2;
   }
 
   async getDoctorsByDisease(disease_id: string): Promise<any> {
@@ -112,18 +115,19 @@ export class UserService {
       },
       {
         $project: {
-          areas: {
-            $map: {
-              input: '$areas',
-              as: 'area',
-              in: { $toString: '$$area' },
-            },
-          },
+          // areas: {
+          //   $map: {
+          //     input: '$areas',
+          //     as: 'area',
+          //     in: { $toString: '$$area' },
+          //   },
+          // },
           _id: 0,
         },
       },
     ]);
     const { areas } = area_disease[0];
+
     const doctors = await this.userModel.aggregate([
       {
         $match: {

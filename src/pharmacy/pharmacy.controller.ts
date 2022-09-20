@@ -50,7 +50,7 @@ export class PharmacyController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Traerse farmacias segun medicina' })
   @ApiParam({ name: 'id', description: 'id del medicamento' })
-  async getUsersByArea(@Res() res, @Param('id') medicine_id) {
+  async getPharmactByMedicine(@Res() res, @Param('id') medicine_id) {
     const data = await this.pharmacyService.getByMedicine(medicine_id);
     return res.status(HttpStatus.OK).json({
       data,
@@ -76,7 +76,7 @@ export class PharmacyController {
     type: PharmacyDTO,
   })
   @ApiParam({ name: 'id', description: 'id de farmacia' })
-  async updateHC(@Res() res, @Body() body: PharmacyDTO, @Param('id') id) {
+  async updatePharmacy(@Res() res, @Body() body: PharmacyDTO, @Param('id') id) {
     const data = await this.pharmacyService.updatePharmacy(id, body);
     return res.json({
       data,

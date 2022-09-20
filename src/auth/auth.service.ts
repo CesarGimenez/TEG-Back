@@ -17,9 +17,9 @@ export class AuthService {
   async login(user: any): Promise<any> {
     const { email, password } = user;
     const data = await this.usersService.findOneByEmail(email);
-    if (!data) throw new HttpException('INVALID_CREDENTIALS', 403);
+    if (!data) throw new HttpException('Credenciales invalidad', 403);
     const checkPassword = await compare(password, data.password);
-    if (!checkPassword) throw new HttpException('INVALID_CREDENTIALS', 403);
+    if (!checkPassword) throw new HttpException('Credenciales invalidas', 403);
     const payload = { name: user.first_name, id: user._id, email: user.email };
 
     return {

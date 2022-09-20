@@ -7,7 +7,7 @@ import { authDTO } from './dto/auth.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-
+  token = '';
   @Post('/login')
   @ApiOperation({ summary: 'Login de usuario' })
   @ApiBody({
@@ -15,6 +15,7 @@ export class AuthController {
   })
   async login(@Res() res: Response, @Body() auth: authDTO) {
     const user = await this.authService.login(auth);
+    this.token = user.access;
     res.cookie('jwt', user.access);
     return res.json({
       user,
@@ -24,7 +25,7 @@ export class AuthController {
   @Get('/me')
   async getMe(@Req() req: Request) {
     const cookie = req.cookies['jwt'];
-    const data = await this.authService.getMe(cookie);
+    const data = await this.authService.getMe(cookie || this.token);
     return data;
   }
 }
