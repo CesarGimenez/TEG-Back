@@ -35,63 +35,6 @@ export class UserService {
     const users2 = await this.userModel
       .find({ areas: { $in: [area_id] } })
       .populate('areas role_id');
-    // const users = await this.userModel.aggregate([
-    //   {
-    //     $match: {
-    //       areas: {
-    //         $in: [area_id],
-    //       },
-    //     },
-    //   },
-    //   {
-    //     $project: {
-    //       name: { $concat: ['$first_name', ' ', '$last_name'] },
-    //       phone: 1,
-    //       email: 1,
-    //       role_id: 1,
-    //       areas: {
-    //         $map: {
-    //           input: '$areas',
-    //           as: 'a',
-    //           in: {
-    //             $toObjectId: '$$a',
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'areas',
-    //       let: {
-    //         a: '$areas',
-    //       },
-    //       pipeline: [
-    //         {
-    //           $match: {
-    //             $expr: {
-    //               $in: ['$_id', '$$a'],
-    //             },
-    //           },
-    //         },
-    //       ],
-    //       as: 'areas',
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'roles',
-    //       localField: 'role_id',
-    //       foreignField: '_id',
-    //       as: 'role',
-    //     },
-    //   },
-    //   {
-    //     $unwind: {
-    //       path: '$role',
-    //     },
-    //   },
-    // ]);
     return users2;
   }
 
