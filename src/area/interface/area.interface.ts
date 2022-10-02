@@ -1,3 +1,6 @@
 import { Document } from 'mongoose';
 
-export type AreaI = Document;
+export interface AreaI extends Document {
+  name: string;
+  description: string;
+}

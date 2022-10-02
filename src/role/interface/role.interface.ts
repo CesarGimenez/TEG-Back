@@ -1,3 +1,7 @@
 import { Document } from 'mongoose';
 
-export type RoleI = Document;
+export interface RoleI extends Document {
+  type: number;
+  name: string;
+  description: string;
+}

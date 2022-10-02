@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { MedicineArrayDTO } from './dto/pharmacy.dto';
 import { PharmacyI } from './interface/pharmacy.interface';
 
 @Injectable()
@@ -16,15 +17,19 @@ export class PharmacyService {
   }
 
   async getOne(id: string): Promise<PharmacyI> {
-    const pharmacy = await this.pharmacyModel
+    const pharmacy: PharmacyI = await this.pharmacyModel
       .findById(id)
       .populate('medicines');
     return pharmacy;
   }
 
-  async getByMedicine(medicine_id: string): Promise<any> {
+  async getByMedicine(data: MedicineArrayDTO): Promise<PharmacyI[]> {
+    const { medicines } = data;
+    if (medicines.length <= 0) {
+      return await this.pharmacyModel.find();
+    }
     const pharmacies = await this.pharmacyModel.find({
-      medicines: { $in: [medicine_id] },
+      medicines: { $in: medicines },
     });
     return pharmacies;
   }

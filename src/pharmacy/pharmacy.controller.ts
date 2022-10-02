@@ -18,7 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
-import { PharmacyDTO } from './dto/pharmacy.dto';
+import { MedicineArrayDTO, PharmacyDTO } from './dto/pharmacy.dto';
 import { PharmacyService } from './pharmacy.service';
 
 @ApiBearerAuth()
@@ -46,12 +46,14 @@ export class PharmacyController {
     });
   }
 
-  @Get('/medicine/:id')
+  @Post('/medicines')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Traerse farmacias segun medicina' })
-  @ApiParam({ name: 'id', description: 'id del medicamento' })
-  async getPharmactByMedicine(@Res() res, @Param('id') medicine_id) {
-    const data = await this.pharmacyService.getByMedicine(medicine_id);
+  @ApiOperation({ summary: 'Traerse farmacias segun medicinas' })
+  @ApiBody({
+    type: MedicineArrayDTO,
+  })
+  async getPharmacyByMedicine(@Res() res, @Body() body: any) {
+    const data = await this.pharmacyService.getByMedicine(body);
     return res.status(HttpStatus.OK).json({
       data,
     });

@@ -6,7 +6,7 @@ export class Role extends Document {
   @Prop({ required: true, unique: true })
   type: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: true })

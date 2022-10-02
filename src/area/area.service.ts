@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { areaDTO } from './dto/area.dto';
 import { AreaI } from './interface/area.interface';
 
 @Injectable()
@@ -8,11 +9,11 @@ export class AreaService {
   constructor(@InjectModel('Area') private areaModel: Model<AreaI>) {}
 
   async getAllAreas(): Promise<AreaI[]> {
-    const areas = await this.areaModel.find();
+    const areas: AreaI[] = await this.areaModel.find();
     return areas;
   }
 
-  async createArea(area: any): Promise<any> {
+  async createArea(area: areaDTO): Promise<AreaI> {
     const { name, description } = area;
     const newArea = new this.areaModel({
       name,
@@ -22,7 +23,7 @@ export class AreaService {
     return newArea;
   }
 
-  async updateArea(id: string, area: any): Promise<any> {
+  async updateArea(id: string, area: areaDTO): Promise<AreaI> {
     const updateArea = await this.areaModel.findByIdAndUpdate(id, area, {
       new: true,
     });

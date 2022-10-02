@@ -11,16 +11,20 @@ export class MedicineService {
   ) {}
 
   async getAll(): Promise<MedicineI[]> {
-    const medicines = await this.MedicineModel.find().populate('diseases');
+    const medicines: MedicineI[] = await this.MedicineModel.find().populate(
+      'diseases',
+    );
     return medicines;
   }
 
   async getOne(id: string): Promise<MedicineI> {
-    const medicine = await this.MedicineModel.findById(id).populate('diseases');
+    const medicine: MedicineI = await this.MedicineModel.findById(id).populate(
+      'diseases',
+    );
     return medicine;
   }
 
-  async createMedicine(body: any): Promise<any> {
+  async createMedicine(body: any): Promise<MedicineI> {
     const { name, description, posology, high_price, diseases } = body;
     const newMedicine = new this.MedicineModel({
       name,
@@ -33,7 +37,7 @@ export class MedicineService {
     return newMedicine;
   }
 
-  async updateMedicine(id: string, body: any): Promise<any> {
+  async updateMedicine(id: string, body: any): Promise<MedicineI> {
     const updateMedicine = await this.MedicineModel.findByIdAndUpdate(
       id,
       body,

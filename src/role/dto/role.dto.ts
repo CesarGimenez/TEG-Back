@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 export class roleDTO {
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: '1' })
   type: number;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Usuario' })
   name: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Algunos permisos' })
   description: string;
 }

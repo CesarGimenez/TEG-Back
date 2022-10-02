@@ -1,3 +1,9 @@
 import { Document } from 'mongoose';
 
-export type MedicineI = Document;
+export interface MedicineI {
+  name: string;
+  description: string;
+  posology: string;
+  high_price: boolean;
+  diseases: Array<string>;
+}

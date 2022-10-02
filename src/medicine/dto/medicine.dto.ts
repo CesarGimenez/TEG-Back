@@ -1,22 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class MedicineDTO {
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Nombre de alguna Medicina' })
   name: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Medicina buena para ciertas enfermedades como ...' })
   description: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Tomar cada ?? horas' })
   posology: string;
 
   @ApiProperty()
   high_price: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: ['Aca van los id de enfermedades que pueden ser tratadas'],
+  })
   diseases: string[];
 }
