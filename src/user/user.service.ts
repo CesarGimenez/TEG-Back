@@ -123,9 +123,7 @@ export class UserService {
       .findById(id)
       .populate('role_id')
       .populate('areas');
-    return {
-      user,
-    };
+    return user;
   }
 
   async getUserByDNI(dni: string): Promise<any> {
@@ -148,9 +146,9 @@ export class UserService {
   }
 
   async updateUser(id: string, body: any): Promise<any> {
-    const { password } = body;
-    const hashPassword = await hash(password, 10);
-    body = { ...body, password: hashPassword };
+    // const { password } = body;
+    // const hashPassword = await hash(password, 10);
+    // body = { ...body, password: hashPassword };
     const user = await this.userModel.findByIdAndUpdate(id, body, {
       new: true,
     });
@@ -180,5 +178,19 @@ export class UserService {
   async deleteUser(id: string): Promise<any> {
     const userDeleted = await this.userModel.findByIdAndDelete(id);
     return { userDeleted };
+  }
+
+  async uploadImageUser(image: string, id: string): Promise<any> {
+    if (!image) {
+      return {
+        msg: 'No se envio ninguna imagen',
+      };
+    }
+    const user = await this.userModel.findByIdAndUpdate(
+      id,
+      { image },
+      { new: true },
+    );
+    return user;
   }
 }

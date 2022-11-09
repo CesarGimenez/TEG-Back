@@ -23,10 +23,13 @@ export class User extends Document {
   phone: string;
 
   @Prop({ type: Date })
-  birthdate;
+  birthdate: any;
 
   @Prop()
   image: string;
+
+  @Prop()
+  gender?: string;
 
   @Prop({ default: true })
   active: boolean;
@@ -42,6 +45,9 @@ export class User extends Document {
 
   @Prop({ default: '' })
   blood_group: string;
+
+  @Prop({ default: '' })
+  address: string;
 
   @Prop({ default: '' })
   centeradmin: string;

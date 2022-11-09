@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
 import { passwordDTO } from './dto/password.dto';
+import { updateUserDto } from './dto/update-user.dto';
 import { userDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -88,9 +89,9 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'id del usuario' })
   @UseGuards(JwtAuthGuard)
   async getOneUser(@Res() res, @Param('id') id) {
-    const user = await this.userService.getOneUser(id);
+    const userDetail = await this.userService.getOneUser(id);
     return res.json({
-      user,
+      userDetail,
     });
   }
 
@@ -111,10 +112,14 @@ export class UserController {
   @ApiOperation({ summary: 'Editar los datos de un usuario' })
   @ApiParam({ name: 'id', description: 'id del usuario' })
   @ApiBody({
-    type: userDTO,
+    type: updateUserDto,
   })
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Res() res, @Param('id') id, @Body() updateUser: userDTO) {
+  async updateUser(
+    @Res() res,
+    @Param('id') id,
+    @Body() updateUser: updateUserDto,
+  ) {
     const data = await this.userService.updateUser(id, updateUser);
     return res.json({
       data,
@@ -141,6 +146,17 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async deleteUser(@Res() res, @Param('id') id) {
     const data = await this.userService.deleteUser(id);
+    return res.json({
+      data,
+    });
+  }
+
+  @Put('uploadImage/:id')
+  @ApiOperation({ summary: 'Subir imagen de perfil a usuario' })
+  @ApiParam({ name: 'id', description: 'id del usuario' })
+  async uploadImageUser(@Res() res, @Param('id') id, @Body() body) {
+    const { image } = body;
+    const data = await this.userService.uploadImageUser(image, id);
     return res.json({
       data,
     });

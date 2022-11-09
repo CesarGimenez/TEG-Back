@@ -13,7 +13,6 @@ import { PharmacyModule } from './pharmacy/pharmacy.module';
 import { HealthcenterModule } from './healthcenter/healthcenter.module';
 import { DiagnosticModule } from './diagnostic/diagnostic.module';
 import { AttachmentModule } from './attachment/attachment.module';
-
 @Module({
   imports: [
     UserModule,

@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-export class userDTO {
+export class updateUserDto {
   @IsNotEmpty()
   @ApiProperty({ example: 'Juan' })
   first_name: string;
@@ -24,21 +24,12 @@ export class userDTO {
   @ApiProperty({ example: 'juan@gmail.com' })
   email: string;
 
-  @IsNotEmpty()
-  @ApiProperty({ example: '123456' })
-  @MinLength(5)
-  @MaxLength(12)
-  password: string;
-
-  @IsNotEmpty()
   @ApiProperty({ example: 'Calle los cerezos' })
   address: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: '+58 12345678' })
   phone: string;
 
-  @IsNotEmpty()
   birthdate: Date;
 
   @ApiProperty({ example: 'Palabrasecreta' })
@@ -76,6 +67,5 @@ export class userDTO {
   pharmacyadmin: string;
 
   @ApiProperty({ example: 'Aca va el id del Rol' })
-  @IsNotEmpty()
   role_id: string;
 }
