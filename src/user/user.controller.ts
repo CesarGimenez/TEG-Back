@@ -95,17 +95,22 @@ export class UserController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Agregar un nuevo usuario' })
   @ApiBody({
     type: userDTO,
   })
   async createUser(@Res() res, @Body() createUser: userDTO) {
+    const userEmailFound = await this.userService.findOneByEmail(
+      createUser?.email,
+    );
+    if (userEmailFound) {
+      return res.json({
+        error: 'Correo actualmente en uso',
+      });
+    }
     const user = await this.userService.createUser(createUser);
-    return res.json({
-      user,
-    });
+    return res.json({ user, msg: 'Tu cuenta se ha creado con exito!' });
   }
 
   @Put('/:id')
@@ -132,7 +137,6 @@ export class UserController {
   @ApiBody({
     type: passwordDTO,
   })
-  @UseGuards(JwtAuthGuard)
   async updatePassword(@Res() res, @Param('id') id, @Body() body: passwordDTO) {
     const data = await this.userService.changePassword(id, body);
     return res.json({

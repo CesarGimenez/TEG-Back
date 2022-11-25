@@ -28,7 +28,6 @@ export class AreaController {
   constructor(private areaService: AreaService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async getAllAreas(@Res() res) {
     const data = await this.areaService.getAllAreas();
     return res.status(HttpStatus.OK).json({
