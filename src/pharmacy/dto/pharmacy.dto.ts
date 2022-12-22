@@ -30,7 +30,7 @@ export class PharmacyDTO {
 
   is_active: boolean;
 
-  @ApiProperty({ example: [''] })
+  @ApiProperty({ example: [] })
   medicines: string[];
 }
 

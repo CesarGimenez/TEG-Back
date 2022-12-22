@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 
 export class DiseaseDTO {
   @IsNotEmpty()
@@ -15,7 +15,16 @@ export class DiseaseDTO {
   syntoms: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: [''] })
+  @ApiProperty({ example: 'Se transmite por..' })
+  transmission: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  @ApiProperty({ example: true })
+  require_diagnosys: boolean;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: [] })
   areas: string[];
 
   @ApiProperty({ example: 'Se puede tratar con..' })

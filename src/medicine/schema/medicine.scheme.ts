@@ -39,8 +39,11 @@ export class Medicine extends Document {
   })
   way: WayType;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   principle: string;
+
+  @Prop({ required: true, default: true })
+  active: boolean;
 
   @Prop({ required: true })
   high_price: boolean;

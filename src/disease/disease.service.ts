@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { DiseaseDTO } from './dto/disease.dto';
 import { DiseaseI } from './interface/disease.interface';
 
 @Injectable()
@@ -17,13 +18,14 @@ export class DiseaseService {
     return disease;
   }
 
-  async createDisease(disease: any): Promise<any> {
-    const { name, description, treatment, areas } = disease;
+  async createDisease(disease: DiseaseDTO): Promise<any> {
+    const { name, description, treatment, areas, syntoms } = disease;
     const newDisease = new this.diseaseModel({
       name,
       description,
       treatment,
       areas,
+      syntoms,
     });
     await newDisease.save();
     return newDisease;

@@ -13,6 +13,15 @@ export class Disease extends Document {
   @Prop({ required: true })
   syntoms: string;
 
+  @Prop({ required: true, default: true })
+  active: boolean;
+
+  @Prop({ required: true, default: false })
+  require_diagnosys: boolean;
+
+  @Prop({ required: true })
+  transmission: string;
+
   treatment: string;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Area' }] })

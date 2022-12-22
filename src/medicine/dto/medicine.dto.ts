@@ -27,7 +27,8 @@ export class MedicineDTO {
   high_price: boolean;
 
   @ApiProperty({
-    example: [''],
+    example: [],
+    required: false,
   })
   diseases: string[];
 }

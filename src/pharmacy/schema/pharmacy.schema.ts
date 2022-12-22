@@ -13,7 +13,7 @@ export class Pharmacy extends Document {
   @Prop({ required: true })
   address: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: 'Lara' })
   state: string;
 
   @Prop({ required: true })

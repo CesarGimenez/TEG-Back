@@ -5,5 +5,8 @@ export interface DiseaseI extends Document {
   description: string;
   syntoms: string;
   treatment: string;
+  active: boolean;
   areas: string[];
+  require_diagnosys: boolean;
+  transmission: string;
 }
