@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/user/schema/user.schema';
 
-@Schema()
+@Schema({ timestamps: true })
 export class HealthCenter extends Document {
   @Prop({ required: true })
   name: string;

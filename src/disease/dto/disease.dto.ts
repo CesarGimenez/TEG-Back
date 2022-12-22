@@ -3,17 +3,21 @@ import { IsNotEmpty } from 'class-validator';
 
 export class DiseaseDTO {
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Enfermedad de..' })
   name: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Es un virus/afeccion que..' })
   description: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ example: 'Normalmente presenta..' })
+  syntoms: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: [''] })
   areas: string[];
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Se puede tratar con..' })
   treatment: string;
 }

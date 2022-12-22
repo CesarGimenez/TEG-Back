@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Medicine } from 'src/medicine/schema/medicine.scheme';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Pharmacy extends Document {
   @Prop({ required: true })
   name: string;
@@ -12,6 +12,9 @@ export class Pharmacy extends Document {
 
   @Prop({ required: true })
   address: string;
+
+  @Prop({ required: true })
+  state: string;
 
   @Prop({ required: true })
   phones: string;

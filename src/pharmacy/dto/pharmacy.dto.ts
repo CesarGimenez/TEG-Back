@@ -21,12 +21,16 @@ export class PharmacyDTO {
   address: string;
 
   @IsNotEmpty()
+  @ApiProperty({ example: 'Lara' })
+  state: string;
+
+  @IsNotEmpty()
   @ApiProperty({ example: '+58 5555445' })
   phones: string;
 
   is_active: boolean;
 
-  @ApiProperty({ example: ['Aca van los id de las medicinas'] })
+  @ApiProperty({ example: [''] })
   medicines: string[];
 }
 

@@ -13,6 +13,7 @@ import { PharmacyModule } from './pharmacy/pharmacy.module';
 import { HealthcenterModule } from './healthcenter/healthcenter.module';
 import { DiagnosticModule } from './diagnostic/diagnostic.module';
 import { AttachmentModule } from './attachment/attachment.module';
+import { MedicalrecordModule } from './medicalrecord/medicalrecord.module';
 @Module({
   imports: [
     UserModule,
@@ -29,6 +30,7 @@ import { AttachmentModule } from './attachment/attachment.module';
     HealthcenterModule,
     DiagnosticModule,
     AttachmentModule,
+    MedicalrecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

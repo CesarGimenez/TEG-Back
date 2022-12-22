@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { WayType } from '../schema/medicine.scheme';
 
 export class MedicineDTO {
   @IsNotEmpty()
@@ -11,6 +12,14 @@ export class MedicineDTO {
   description: string;
 
   @IsNotEmpty()
+  @ApiProperty({ example: 'Oral', enum: WayType, enumName: 'way' })
+  way: WayType;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: 'Acetaminofen' })
+  principle: string;
+
+  @IsNotEmpty()
   @ApiProperty({ example: 'Tomar cada ?? horas' })
   posology: string;
 
@@ -18,7 +27,7 @@ export class MedicineDTO {
   high_price: boolean;
 
   @ApiProperty({
-    example: ['Aca van los id de enfermedades que pueden ser tratadas'],
+    example: [''],
   })
   diseases: string[];
 }

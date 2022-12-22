@@ -2,7 +2,25 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Disease } from 'src/disease/schema/disease.schema';
 
-@Schema()
+export enum WayType {
+  ORAL = 'Oral',
+  INTRAVENOSA = 'Intravenosa',
+  INTRAMUSCULAR = 'Intramuscular',
+  INTRATECAL = 'Intratecal',
+  SUBCUTANEA = 'Subcutánea',
+  SUBLINGUAL = 'Sublingual',
+  BUCAL = 'Bucal',
+  RECTAL = 'Rectal',
+  VAGINAL = 'Vaginal',
+  OCULAR = 'Ocular',
+  OTICA = 'Otica',
+  NASAL = 'Nasal',
+  NEBULIZACION = 'Nebulizacion',
+  INHALACION = 'Inhalacion',
+  TRANSDERMICO = 'transdérmico',
+  OTRO = 'Otro',
+}
+@Schema({ timestamps: true })
 export class Medicine extends Document {
   @Prop({ required: true })
   name: string;
@@ -12,6 +30,17 @@ export class Medicine extends Document {
 
   @Prop({ required: true })
   posology: string;
+
+  @Prop({
+    required: true,
+    type: 'String',
+    enum: WayType,
+    default: WayType.ORAL,
+  })
+  way: WayType;
+
+  @Prop({ required: true })
+  principle: string;
 
   @Prop({ required: true })
   high_price: boolean;
