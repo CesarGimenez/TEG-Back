@@ -19,13 +19,15 @@ export class DiseaseService {
   }
 
   async createDisease(disease: DiseaseDTO): Promise<any> {
-    const { name, description, treatment, areas, syntoms } = disease;
+    const { name, description, treatment, areas, syntoms, transmission } =
+      disease;
     const newDisease = new this.diseaseModel({
       name,
       description,
       treatment,
       areas,
       syntoms,
+      transmission,
     });
     await newDisease.save();
     return newDisease;
