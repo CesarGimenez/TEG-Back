@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 export class areaDTO {
   @IsNotEmpty()
   @ApiProperty({ example: 'Nombre del area' })
@@ -8,4 +8,8 @@ export class areaDTO {
   @IsNotEmpty()
   @ApiProperty({ example: 'Descripcion del area' })
   description: string;
+
+  @IsOptional()
+  @ApiProperty({ example: true })
+  active: boolean;
 }

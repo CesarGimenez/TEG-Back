@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { PaginationParams } from 'src/pagination';
 import { DiseaseService } from './disease.service';
 import { DiseaseDTO } from './dto/disease.dto';
 
@@ -29,21 +31,27 @@ export class DiseaseController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getAllDiseases(@Res() res) {
-    const data = await this.diseaseService.getAllDiseases();
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+  async getAllDiseases(@Res() res, @Query() { skip, limit }: PaginationParams) {
+    try {
+      const data = await this.diseaseService.getAllDiseases(skip, limit);
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'id de la enfermdad' })
   async getOneDisease(@Res() res, @Param('id') id) {
-    const data = await this.diseaseService.getOneDisease(id);
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+    try {
+      const data = await this.diseaseService.getOneDisease(id);
+      return res.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -53,10 +61,14 @@ export class DiseaseController {
     type: DiseaseDTO,
   })
   async createDisease(@Res() res, @Body() createDisease: DiseaseDTO) {
-    const data = await this.diseaseService.createDisease(createDisease);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.diseaseService.createDisease(createDisease);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -71,10 +83,14 @@ export class DiseaseController {
     @Body() updateDisease: DiseaseDTO,
     @Param('id') id,
   ) {
-    const data = await this.diseaseService.updateDisease(id, updateDisease);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.diseaseService.updateDisease(id, updateDisease);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -82,9 +98,13 @@ export class DiseaseController {
   @ApiOperation({ summary: 'Eliminar una enfermedad' })
   @ApiParam({ name: 'id', description: 'id de la enfermedad' })
   async deleteDisease(@Res() res, @Param('id') id) {
-    const data = await this.diseaseService.deleteDisease(id);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.diseaseService.deleteDisease(id);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 }

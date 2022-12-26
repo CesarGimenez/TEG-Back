@@ -8,16 +8,32 @@ import { AreaI } from './interface/area.interface';
 export class AreaService {
   constructor(@InjectModel('Area') private areaModel: Model<AreaI>) {}
 
-  async getAllAreas(): Promise<AreaI[]> {
-    const areas: AreaI[] = await this.areaModel.find();
-    return areas;
+  async getAllAreas(
+    documentsToSkip = 0,
+    limitOfDocuments?: number,
+  ): Promise<any> {
+    try {
+      const count: number = await this.areaModel.find().count();
+      let areas: AreaI[] = await this.areaModel.find();
+      if (limitOfDocuments) {
+        areas = await this.areaModel
+          .find()
+          .sort({ createdAt: -1 })
+          .skip(documentsToSkip)
+          .limit(limitOfDocuments);
+      }
+      return { areas, count };
+    } catch (error) {
+      throw new Error('Ha ocurrido un error en servidor');
+    }
   }
 
   async createArea(area: areaDTO): Promise<AreaI> {
-    const { name, description } = area;
+    const { name, description, active } = area;
     const newArea = new this.areaModel({
       name,
       description,
+      active,
     });
     await newArea.save();
     return newArea;

@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { PaginationParams } from 'src/pagination';
 import { MedicineDTO } from './dto/medicine.dto';
 import { MedicineService } from './medicine.service';
 
@@ -29,21 +31,27 @@ export class MedicineController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getAll(@Res() res) {
-    const data = await this.medicineService.getAll();
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+  async getAll(@Res() res, @Query() { skip, limit }: PaginationParams) {
+    try {
+      const data = await this.medicineService.getAll(skip, limit);
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'id', description: 'id del medicamento' })
   async getOne(@Res() res, @Param('id') id) {
-    const data = await this.medicineService.getOne(id);
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+    try {
+      const data = await this.medicineService.getOne(id);
+      return res.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Post()
@@ -53,10 +61,14 @@ export class MedicineController {
     type: MedicineDTO,
   })
   async createMedicine(@Res() res, @Body() body: MedicineDTO) {
-    const data = await this.medicineService.createMedicine(body);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.medicineService.createMedicine(body);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Put('/:id')
@@ -67,10 +79,14 @@ export class MedicineController {
   })
   @ApiParam({ name: 'id', description: 'id del centro de salud' })
   async updateMedicine(@Res() res, @Body() body: MedicineDTO, @Param('id') id) {
-    const data = await this.medicineService.updateMedicine(id, body);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.medicineService.updateMedicine(id, body);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Delete('/:id')
@@ -78,9 +94,13 @@ export class MedicineController {
   @ApiOperation({ summary: 'Eliminar un medicamento' })
   @ApiParam({ name: 'id', description: 'id del medicamento' })
   async deleteMedicine(@Res() res, @Param('id') id) {
-    const data = await this.medicineService.deleteMedicine(id);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.medicineService.deleteMedicine(id);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 }

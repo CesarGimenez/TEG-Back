@@ -15,12 +15,30 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
-  async getAllUsers(): Promise<UserI[]> {
-    const users = await this.userModel
-      .find()
-      .populate('role_id')
-      .populate('areas');
-    return users;
+  async getAllUsers(
+    documentsToSkip = 0,
+    limitOfDocuments?: number,
+  ): Promise<any> {
+    try {
+      const count = await this.userModel.find().count();
+      let users = await this.userModel
+        .find()
+        .populate('role_id')
+        .populate('areas');
+
+      if (limitOfDocuments) {
+        users = await this.userModel
+          .find()
+          .populate('role_id')
+          .populate('areas')
+          .sort({ createdAt: -1 })
+          .skip(documentsToSkip)
+          .limit(limitOfDocuments);
+      }
+      return { users, count };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getUsersByRole(role_id: string): Promise<UserI[]> {

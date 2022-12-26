@@ -10,11 +10,18 @@ export class HealthcenterService {
     private HealthCenterModel: Model<HealthCenterI>,
   ) {}
 
-  async getAll(): Promise<HealthCenterI[]> {
-    const healthcenters = await this.HealthCenterModel.find().populate(
-      'doctors',
-    );
-    return healthcenters;
+  async getAll(documentsToSkip = 0, limitOfDocuments?: number): Promise<any> {
+    let healthcenters = await this.HealthCenterModel.find().populate('doctors');
+    const count = await this.HealthCenterModel.find().count();
+
+    if (limitOfDocuments) {
+      healthcenters = await this.HealthCenterModel.find()
+        .populate('doctors')
+        .sort({ createdAt: -1 })
+        .skip(documentsToSkip)
+        .limit(limitOfDocuments);
+    }
+    return { healthcenters, count };
   }
 
   async getOne(id: string): Promise<HealthCenterI> {

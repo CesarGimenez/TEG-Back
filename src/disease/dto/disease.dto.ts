@@ -23,8 +23,7 @@ export class DiseaseDTO {
   @ApiProperty({ example: true })
   require_diagnosys: boolean;
 
-  @IsNotEmpty()
-  @ApiProperty({ example: [] })
+  @ApiProperty({ example: [], default: [] })
   areas: string[];
 
   @ApiProperty({ example: 'Se puede tratar con..' })

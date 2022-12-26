@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { PaginationParams } from 'src/pagination';
 import { HealthCenterDTO } from './dto/healthcenter.dto';
 import { HealthcenterService } from './healthcenter.service';
 
@@ -29,21 +31,27 @@ export class HealthcenterController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getAll(@Res() res) {
-    const data = await this.healthCenterService.getAll();
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+  async getAll(@Res() res, @Query() { skip, limit }: PaginationParams) {
+    try {
+      const data = await this.healthCenterService.getAll(skip, limit);
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'id', description: 'id del centro de salud' })
   async getOne(@Res() res, @Param('id') id) {
-    const data = await this.healthCenterService.getOne(id);
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+    try {
+      const data = await this.healthCenterService.getOne(id);
+      return res.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Get('/doctor/:id')
@@ -51,10 +59,14 @@ export class HealthcenterController {
   @ApiOperation({ summary: 'Traerse centros segun doctor' })
   @ApiParam({ name: 'id', description: 'id de doctor' })
   async getByDoctor(@Res() res, @Param('id') doctor_id) {
-    const data = await this.healthCenterService.getByDoctor(doctor_id);
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+    try {
+      const data = await this.healthCenterService.getByDoctor(doctor_id);
+      return res.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Post()
@@ -63,11 +75,15 @@ export class HealthcenterController {
   @ApiBody({
     type: HealthCenterDTO,
   })
-  async createDisease(@Res() res, @Body() body: HealthCenterDTO) {
-    const data = await this.healthCenterService.createHealthCenter(body);
-    return res.json({
-      data,
-    });
+  async createHC(@Res() res, @Body() body: HealthCenterDTO) {
+    try {
+      const data = await this.healthCenterService.createHealthCenter(body);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Put('/:id')
@@ -78,10 +94,14 @@ export class HealthcenterController {
   })
   @ApiParam({ name: 'id', description: 'id del centro de salud' })
   async updateHC(@Res() res, @Body() body: HealthCenterDTO, @Param('id') id) {
-    const data = await this.healthCenterService.updateHealthCenter(id, body);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.healthCenterService.updateHealthCenter(id, body);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   @Delete('/:id')
@@ -89,9 +109,13 @@ export class HealthcenterController {
   @ApiOperation({ summary: 'Eliminar un centro de salud' })
   @ApiParam({ name: 'id', description: 'id del centro de salud' })
   async deleteHC(@Res() res, @Param('id') id) {
-    const data = await this.healthCenterService.deleteHealthCenter(id);
-    return res.json({
-      data,
-    });
+    try {
+      const data = await this.healthCenterService.deleteHealthCenter(id);
+      return res.json({
+        data,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 }

@@ -8,9 +8,30 @@ import { DiseaseI } from './interface/disease.interface';
 export class DiseaseService {
   constructor(@InjectModel('Disease') private diseaseModel: Model<DiseaseI>) {}
 
-  async getAllDiseases(): Promise<DiseaseI[]> {
-    const disease = await this.diseaseModel.find().populate('areas');
-    return disease;
+  async getAllDiseases(
+    documentsToSkip = 0,
+    limitOfDocuments?: number,
+  ): Promise<any> {
+    try {
+      const count = await this.diseaseModel.count();
+      let disease = await this.diseaseModel
+        .find()
+        .populate('areas')
+        .sort({ createdAt: -1 });
+
+      if (limitOfDocuments) {
+        disease = await this.diseaseModel
+          .find()
+          .populate('areas')
+          .sort({ createdAt: -1 })
+          .limit(limitOfDocuments)
+          .skip(documentsToSkip);
+      }
+
+      return { disease, count };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getOneDisease(id: string): Promise<DiseaseI> {

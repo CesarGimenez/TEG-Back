@@ -11,11 +11,24 @@ export class MedicineService {
     private MedicineModel: Model<MedicineI>,
   ) {}
 
-  async getAll(): Promise<MedicineI[]> {
-    const medicines: MedicineI[] = await this.MedicineModel.find().populate(
-      'diseases',
-    );
-    return medicines;
+  async getAll(documentsToSkip = 0, limitOfDocuments?: number): Promise<any> {
+    const count = await this.MedicineModel.count();
+
+    if (limitOfDocuments) {
+      const medicines = await this.MedicineModel.find()
+        .populate('diseases')
+        .sort({ createdAt: -1 })
+        .skip(documentsToSkip)
+        .limit(limitOfDocuments);
+
+      return { medicines, count };
+    }
+
+    const medicines = await this.MedicineModel.find()
+      .populate('diseases')
+      .sort({ createdAt: -1 });
+
+    return { medicines, count };
   }
 
   async getOne(id: string): Promise<MedicineI> {

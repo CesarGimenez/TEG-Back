@@ -16,6 +16,7 @@ export class HealthCenter extends Document {
   @Prop({ required: true })
   phones: string;
 
+  @Prop({ required: true })
   is_public: boolean;
 
   @Prop({ default: true })

@@ -11,9 +11,22 @@ export class PharmacyService {
     private pharmacyModel: Model<PharmacyI>,
   ) {}
 
-  async getAll(): Promise<PharmacyI[]> {
-    const pharmacies = await this.pharmacyModel.find().populate('medicines');
-    return pharmacies;
+  async getAll(documentsToSkip = 0, limitOfDocuments?: number): Promise<any> {
+    try {
+      const count = await this.pharmacyModel.find().count();
+      let pharmacies = await this.pharmacyModel.find().populate('medicines');
+      if (limitOfDocuments) {
+        pharmacies = await this.pharmacyModel
+          .find()
+          .populate('medicines')
+          .sort({ createdAt: -1 })
+          .skip(documentsToSkip)
+          .limit(limitOfDocuments);
+      }
+      return { pharmacies, count };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getOne(id: string): Promise<PharmacyI> {
