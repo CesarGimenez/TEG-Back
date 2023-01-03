@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Schema as MongooseSchema } from 'mongoose';
 import { Area } from 'src/area/schema/area.schema';
+import { HealthCenter } from 'src/healthcenter/schema/healthcenter.schema';
+import { Pharmacy } from 'src/pharmacy/schema/pharmacy.schema';
 import { Role } from '../../role/schema/role.schema';
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -49,11 +51,11 @@ export class User extends Document {
   @Prop({ default: '' })
   address: string;
 
-  @Prop({ default: '' })
-  centeradmin: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Healthcenter' })
+  centeradmin: HealthCenter;
 
-  @Prop({ default: '' })
-  pharmacyadmin: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Pharmacy' })
+  pharmacyadmin: Pharmacy;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Area' }] })
   areas: Area[];

@@ -46,9 +46,7 @@ export class PharmacyController {
   async getOne(@Res() res, @Param('id') id) {
     try {
       const data = await this.pharmacyService.getOne(id);
-      return res.status(HttpStatus.OK).json({
-        data,
-      });
+      return res.status(HttpStatus.OK).json(data);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     }
@@ -94,7 +92,7 @@ export class PharmacyController {
     type: PharmacyDTO,
   })
   @ApiParam({ name: 'id', description: 'id de farmacia' })
-  async updatePharmacy(@Res() res, @Body() body: PharmacyDTO, @Param('id') id) {
+  async updatePharmacy(@Res() res, @Body() body: any, @Param('id') id) {
     try {
       const data = await this.pharmacyService.updatePharmacy(id, body);
       return res.json({

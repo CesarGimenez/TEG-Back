@@ -93,7 +93,7 @@ export class HealthcenterController {
     type: HealthCenterDTO,
   })
   @ApiParam({ name: 'id', description: 'id del centro de salud' })
-  async updateHC(@Res() res, @Body() body: HealthCenterDTO, @Param('id') id) {
+  async updateHC(@Res() res, @Body() body: any, @Param('id') id) {
     try {
       const data = await this.healthCenterService.updateHealthCenter(id, body);
       return res.json({

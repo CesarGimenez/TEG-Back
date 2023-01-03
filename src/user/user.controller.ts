@@ -83,9 +83,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async getUserByDNI(@Res() res, @Param('dni') dni) {
     const user = await this.userService.getUserByDNI(dni);
-    return res.json({
-      user,
-    });
+    return res.json(user);
   }
 
   @Get('/:id')

@@ -12,7 +12,9 @@ export class UserService {
   ) {}
 
   async findOneByEmail(email: string): Promise<UserI | undefined> {
-    return this.userModel.findOne({ email });
+    return (await this.userModel.findOne({ email })).populate(
+      'pharmacyadmin centeradmin areas role_id',
+    );
   }
 
   async getAllUsers(
@@ -149,9 +151,7 @@ export class UserService {
       .findOne({ dni }, { password: 0 })
       .populate('role_id')
       .populate('areas');
-    return {
-      user,
-    };
+    return user;
   }
 
   async createUser(user: any): Promise<UserI> {
