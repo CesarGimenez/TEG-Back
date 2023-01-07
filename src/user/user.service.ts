@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
 import { UserI } from './interface/user.interface';
+import { queryUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UserService {
@@ -11,10 +12,10 @@ export class UserService {
     @InjectModel('Disease') private diseaseModel: Model<any>,
   ) {}
 
-  async findOneByEmail(email: string): Promise<UserI | undefined> {
-    return (await this.userModel.findOne({ email })).populate(
-      'pharmacyadmin centeradmin areas role_id',
-    );
+  async findOneByEmail(email: string): Promise<any> {
+    return await this.userModel
+      .findOne({ email })
+      .populate('pharmacyadmin centeradmin areas role_id');
   }
 
   async getAllUsers(
@@ -155,12 +156,16 @@ export class UserService {
   }
 
   async createUser(user: any): Promise<UserI> {
-    const { password } = user;
-    const hashPassword = await hash(password, 10);
-    user = { ...user, password: hashPassword };
-    const newUser = new this.userModel(user);
-    await newUser.save();
-    return newUser;
+    try {
+      const { password } = user;
+      const hashPassword = await hash(password, 10);
+      user = { ...user, password: hashPassword };
+      const newUser = new this.userModel(user);
+      await newUser.save();
+      return newUser;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async updateUser(id: string, body: any): Promise<any> {
@@ -210,5 +215,20 @@ export class UserService {
       { new: true },
     );
     return user;
+  }
+
+  async findUserByQuery(
+    first_name: string,
+    last_name: string,
+    dni: string,
+  ): Promise<any> {
+    try {
+      let query = {};
+      if (first_name) query = { ...query, first_name };
+      if (last_name) query = { ...query, last_name };
+      if (dni) query = { ...query, dni };
+      const users = await this.userModel.find(query);
+      return users;
+    } catch (error) {}
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateMedicalrecordDto {
   @IsNotEmpty()
@@ -7,42 +7,41 @@ export class CreateMedicalrecordDto {
   patient: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Antecedentes generales' })
+  @ApiProperty({ example: 'Antecedentes generales', default: '' })
   general: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Enfermedad actual' })
+  @ApiProperty({ example: 'Enfermedad actual', default: '' })
   current_illness: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Antecedentes personales' })
+  @ApiProperty({ example: 'Antecedentes personales', default: '' })
   personal_history: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Antecedentes familiares' })
+  @ApiProperty({ example: 'Antecedentes familiares', default: '' })
   family_history: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Antecedentes quirurgicos' })
+  @ApiProperty({ example: 'Antecedentes quirurgicos', default: '' })
   surgical_history: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Historial de inmunizaciones' })
+  @ApiProperty({ example: 'Historial de inmunizaciones', default: '' })
   immunizations: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Antecedentes ginecologicos' })
+  @ApiProperty({ example: 'Antecedentes ginecologicos', default: '' })
   gynecologic_history: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Tratamiento actual' })
+  @ApiProperty({ example: 'Tratamiento actual', default: '' })
   treatment: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'Plan terapeutico' })
+  @ApiProperty({ example: 'Plan terapeutico', default: '' })
   therapeutic_plan: string;
 
-  @IsNotEmpty()
-  @ApiProperty({ example: 'Ultima actualizacion por.. (Doctor ID)' })
+  @IsOptional()
   last_update: string;
 }

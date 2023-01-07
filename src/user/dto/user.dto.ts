@@ -65,16 +65,6 @@ export class userDTO {
   })
   areas: string[];
 
-  @ApiProperty({
-    example: 'Si es un Admin de centro de salud, aca va el id del centro',
-  })
-  centeradmin: string;
-
-  @ApiProperty({
-    example: 'Si es un Admin de farmacia, aca va el id de la farmacia',
-  })
-  pharmacyadmin: string;
-
   @ApiProperty({ example: 'Aca va el id del Rol' })
   @IsNotEmpty()
   role_id: string;

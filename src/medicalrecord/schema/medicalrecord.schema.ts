@@ -7,31 +7,31 @@ export class MedicalRecord extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', unique: true })
   patient: User;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   general: string;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   current_illness: string;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   personal_history: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   family_history: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   surgical_history: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   immunizations: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   gynecologic_history: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   treatment: string;
 
-  @Prop({ default: true })
+  @Prop({ default: '' })
   therapeutic_plan: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })

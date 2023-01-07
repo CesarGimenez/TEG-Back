@@ -31,8 +31,17 @@ export class Diagnosis extends Document {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Disease' }] })
-  diseases: Disease[];
+  @Prop({ required: true })
+  pharmaceutic_recomendation: string;
+
+  @Prop({ required: true })
+  medic_recomendation: string;
+
+  @Prop({ required: true })
+  treatment: string;
+
+  // @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Disease' }] })
+  // diseases: Disease[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   doctor: User;

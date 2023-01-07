@@ -51,12 +51,24 @@ export class MedicalrecordService {
     }
   }
 
-  async findAllMedicalRecords(): Promise<MedicalRecordI[]> {
+  async findAllMedicalRecords(
+    documentsToSkip = 0,
+    limitOfDocuments?: number,
+  ): Promise<any> {
     try {
-      const data = await this.medicalRecordModel
+      const count = await this.medicalRecordModel.find().count();
+      let medicalrecords = await this.medicalRecordModel
         .find()
         .populate('patient last_update');
-      return data;
+      if (limitOfDocuments) {
+        medicalrecords = await this.medicalRecordModel
+          .find()
+          .populate('patient last_update')
+          .sort({ createdAt: -1 })
+          .skip(documentsToSkip)
+          .limit(limitOfDocuments);
+      }
+      return { count, medicalrecords };
     } catch (error) {
       throw Error(error);
     }
@@ -67,6 +79,17 @@ export class MedicalrecordService {
       const founded = await this.medicalRecordModel
         .findById(id)
         .populate('patient last_updated');
+      return founded;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  async findOneMedicalRecordByPatient(id: string): Promise<MedicalRecordI> {
+    try {
+      const founded = await this.medicalRecordModel
+        .findOne({ patient: id })
+        .populate('patient');
       return founded;
     } catch (error) {
       throw Error(error);

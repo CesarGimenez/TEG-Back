@@ -15,8 +15,20 @@ export class DiagnosisDTO {
   symptoms: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: [] })
-  diseases: string[];
+  @ApiProperty({ example: 'Recomendacion farmaceutica' })
+  pharmaceutic_recomendation: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: 'recomendacion medica' })
+  medic_recomendation: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: 'Tratamiento' })
+  treatment: string;
+
+  // @IsNotEmpty()
+  // @ApiProperty({ example: [] })
+  // diseases: string[];
 
   @IsNotEmpty()
   @ApiProperty({ example: '' })

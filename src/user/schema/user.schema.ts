@@ -52,10 +52,10 @@ export class User extends Document {
   address: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Healthcenter' })
-  centeradmin: HealthCenter;
+  centeradmin?: HealthCenter;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Pharmacy' })
-  pharmacyadmin: Pharmacy;
+  pharmacyadmin?: Pharmacy;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Area' }] })
   areas: Area[];

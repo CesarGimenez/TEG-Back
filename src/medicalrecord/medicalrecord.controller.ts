@@ -8,6 +8,9 @@ import {
   Delete,
   UseGuards,
   Put,
+  Res,
+  Query,
+  HttpStatus,
 } from '@nestjs/common';
 import { MedicalrecordService } from './medicalrecord.service';
 import { CreateMedicalrecordDto } from './dto/create-medicalrecord.dto';
@@ -20,6 +23,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { PaginationParams } from 'src/pagination';
 
 @ApiBearerAuth()
 @ApiTags('MedicalRecord')
@@ -47,11 +51,16 @@ export class MedicalrecordController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAllMedicalRecords() {
+  async findAllMedicalRecords(
+    @Res() res,
+    @Query() { skip, limit }: PaginationParams,
+  ) {
     try {
-      return await this.medicalrecordService.findAllMedicalRecords();
+      const medicalrecord =
+        await this.medicalrecordService.findAllMedicalRecords(skip, limit);
+      return res.status(HttpStatus.OK).json(medicalrecord);
     } catch (error) {
-      throw error;
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     }
   }
 
@@ -62,6 +71,20 @@ export class MedicalrecordController {
   async findOne(@Param('id') id: string) {
     try {
       return await this.medicalrecordService.findOneMedicalRecord(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('patient/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Buscar un historial medico' })
+  @ApiParam({ name: 'id', description: 'id del paciente' })
+  async findOneByPatient(@Param('id') id: string) {
+    try {
+      const medicalRecordPatient =
+        await this.medicalrecordService.findOneMedicalRecordByPatient(id);
+      return medicalRecordPatient;
     } catch (error) {
       throw error;
     }

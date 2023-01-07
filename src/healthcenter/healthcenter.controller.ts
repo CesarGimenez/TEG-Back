@@ -61,9 +61,7 @@ export class HealthcenterController {
   async getByDoctor(@Res() res, @Param('id') doctor_id) {
     try {
       const data = await this.healthCenterService.getByDoctor(doctor_id);
-      return res.status(HttpStatus.OK).json({
-        data,
-      });
+      return res.status(HttpStatus.OK).json(data);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     }

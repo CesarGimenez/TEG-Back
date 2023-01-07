@@ -14,7 +14,18 @@ export class DiagnosticService {
     try {
       const diagnosis: DiagnosisI[] = await this.diagnosisModel
         .find()
-        .populate('diseases doctor patient');
+        .populate('doctor patient');
+      return diagnosis;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  async getDiagnosisByPatient(id: string): Promise<DiagnosisI[]> {
+    try {
+      const diagnosis: DiagnosisI[] = await this.diagnosisModel
+        .find({ patient: id })
+        .populate('doctor patient');
       return diagnosis;
     } catch (error) {
       throw Error(error);
@@ -23,13 +34,23 @@ export class DiagnosticService {
 
   async createDiagnosis(diagnosis: DiagnosisDTO): Promise<DiagnosisI> {
     try {
-      const { type, symptoms, description, diseases, doctor, patient } =
-        diagnosis;
+      const {
+        type,
+        symptoms,
+        description,
+        doctor,
+        patient,
+        medic_recomendation,
+        pharmaceutic_recomendation,
+        treatment,
+      } = diagnosis;
       const newDiagnosis = new this.diagnosisModel({
         type,
         symptoms,
         description,
-        diseases,
+        medic_recomendation,
+        pharmaceutic_recomendation,
+        treatment,
         doctor,
         patient,
       });

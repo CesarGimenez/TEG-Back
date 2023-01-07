@@ -40,6 +40,18 @@ export class DiagnosticController {
     }
   }
 
+  @Get('/patient/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiParam({ name: 'id', description: 'id del diagnostico' })
+  async getAllDiagnosisByPatient(@Res() res, @Param('id') id) {
+    try {
+      const data = await this.diagnosisService.getDiagnosisByPatient(id);
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Agregar un nuevo diagnostico' })
@@ -51,9 +63,7 @@ export class DiagnosticController {
       const diagnosis = await this.diagnosisService.createDiagnosis(
         diagnosisBody,
       );
-      return res.json({
-        diagnosis,
-      });
+      return res.json(diagnosis);
     } catch (error) {
       throw Error(error);
     }

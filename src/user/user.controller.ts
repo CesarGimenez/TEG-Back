@@ -19,8 +19,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { CreateMedicalrecordDto } from 'src/medicalrecord/dto/create-medicalrecord.dto';
+import { MedicalrecordService } from 'src/medicalrecord/medicalrecord.service';
 import { PaginationParams } from 'src/pagination';
 import { passwordDTO } from './dto/password.dto';
+import { queryUserDto } from './dto/query-user.dto';
 import { updateUserDto } from './dto/update-user.dto';
 import { userDTO } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -29,7 +32,10 @@ import { UserService } from './user.service';
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private medicalRecordService: MedicalrecordService,
+  ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -86,6 +92,24 @@ export class UserController {
     return res.json(user);
   }
 
+  @Get('/query')
+  @ApiOperation({
+    summary:
+      'Traerse los detalles de un usuario a partir de su Nombre, apellido o DNI',
+  })
+  @UseGuards(JwtAuthGuard)
+  async findUserByQuery(
+    @Res() res,
+    @Query() { first_name, last_name, dni }: queryUserDto,
+  ) {
+    const user = await this.userService.findUserByQuery(
+      first_name,
+      last_name,
+      dni,
+    );
+    return res.json(user);
+  }
+
   @Get('/:id')
   @ApiOperation({ summary: 'Traerse los detalles de un usuario' })
   @ApiParam({ name: 'id', description: 'id del usuario' })
@@ -103,16 +127,36 @@ export class UserController {
     type: userDTO,
   })
   async createUser(@Res() res, @Body() createUser: userDTO) {
-    const userEmailFound = await this.userService.findOneByEmail(
-      createUser?.email,
-    );
-    if (userEmailFound) {
-      return res.json({
-        error: 'Correo actualmente en uso',
-      });
+    try {
+      const userEmailFound = await this.userService.findOneByEmail(
+        createUser?.email,
+      );
+      if (userEmailFound) {
+        return res.json({
+          error: 'Correo actualmente en uso',
+        });
+      }
+      const user = await this.userService.createUser(createUser);
+      const createMedicalRecord: CreateMedicalrecordDto = {
+        current_illness: '',
+        family_history: '',
+        general: '',
+        gynecologic_history: '',
+        immunizations: '',
+        patient: user?._id,
+        personal_history: '',
+        surgical_history: '',
+        therapeutic_plan: '',
+        treatment: '',
+        last_update: null,
+      };
+      await this.medicalRecordService.createMedicalRecord(createMedicalRecord);
+
+      return res.json({ user, msg: 'Tu cuenta se ha creado con exito!' });
+    } catch (error) {
+      console.log(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
     }
-    const user = await this.userService.createUser(createUser);
-    return res.json({ user, msg: 'Tu cuenta se ha creado con exito!' });
   }
 
   @Put('/:id')
