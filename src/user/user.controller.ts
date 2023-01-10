@@ -25,7 +25,7 @@ import { PaginationParams } from 'src/pagination';
 import { passwordDTO } from './dto/password.dto';
 import { queryUserDto } from './dto/query-user.dto';
 import { updateUserDto } from './dto/update-user.dto';
-import { userDTO } from './dto/user.dto';
+import { AreasArrayDTO, userDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiBearerAuth()
@@ -59,15 +59,16 @@ export class UserController {
     });
   }
 
-  @Get('/area/:id')
+  @Post('/area')
   @ApiOperation({ summary: 'Traerse a los usuarios segun su area' })
-  @ApiParam({ name: 'id', description: 'id del area' })
+  @ApiBody({
+    type: AreasArrayDTO,
+  })
   @UseGuards(JwtAuthGuard)
-  async getUsersByArea(@Res() res, @Param('id') area_id) {
-    const data = await this.userService.getUsersByArea(area_id);
-    return res.status(HttpStatus.OK).json({
-      data,
-    });
+  async getUsersByArea(@Res() res, @Body() body: AreasArrayDTO) {
+    console.log(body);
+    const data = await this.userService.getUsersByArea(body);
+    return res.status(HttpStatus.OK).json(data);
   }
 
   @Get('/disease/:id')
@@ -172,9 +173,7 @@ export class UserController {
     @Body() updateUser: updateUserDto,
   ) {
     const data = await this.userService.updateUser(id, updateUser);
-    return res.json({
-      data,
-    });
+    return res.json(data);
   }
 
   @Put('changepass/:id')
@@ -185,9 +184,7 @@ export class UserController {
   })
   async updatePassword(@Res() res, @Param('id') id, @Body() body: passwordDTO) {
     const data = await this.userService.changePassword(id, body);
-    return res.json({
-      data,
-    });
+    return res.json(data);
   }
 
   @Delete('/:id')

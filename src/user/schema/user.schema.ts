@@ -39,6 +39,9 @@ export class User extends Document {
   @Prop({ default: false })
   is_Admin: boolean;
 
+  @Prop({ default: false })
+  is_verified: boolean;
+
   @Prop({ default: '' })
   parent_phone: string;
 
@@ -50,6 +53,18 @@ export class User extends Document {
 
   @Prop({ default: '' })
   address: string;
+
+  @Prop({ default: '' })
+  mpps_id: string;
+
+  @Prop({ default: '' })
+  college_medic_id: string;
+
+  @Prop({ default: '' })
+  doctor_signature: string;
+
+  @Prop({ default: false })
+  is_doctor: boolean;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Healthcenter' })
   centeradmin?: HealthCenter;

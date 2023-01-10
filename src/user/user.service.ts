@@ -52,9 +52,15 @@ export class UserService {
     return users;
   }
 
-  async getUsersByArea(area_id: string): Promise<any> {
+  async getUsersByArea(body: any): Promise<any> {
+    const { areas } = body;
+    if (areas.length < 1) {
+      return await this.userModel
+        .find({ is_doctor: true })
+        .populate('areas role_id');
+    }
     const users2 = await this.userModel
-      .find({ areas: { $in: [area_id] } })
+      .find({ areas: { $in: areas } })
       .populate('areas role_id');
     return users2;
   }
@@ -172,12 +178,14 @@ export class UserService {
     // const { password } = body;
     // const hashPassword = await hash(password, 10);
     // body = { ...body, password: hashPassword };
-    const user = await this.userModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
-    return {
-      user,
-    };
+    try {
+      const user = await this.userModel.findByIdAndUpdate(id, body, {
+        new: true,
+      });
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async changePassword(id: string, body: any): Promise<any> {
@@ -188,9 +196,7 @@ export class UserService {
       const user = await this.userModel.findByIdAndUpdate(id, body, {
         new: true,
       });
-      return {
-        user,
-      };
+      return user;
     } else {
       return {
         msg: 'Las contrase;as no coinciden',

@@ -25,7 +25,20 @@ export class DiagnosticService {
     try {
       const diagnosis: DiagnosisI[] = await this.diagnosisModel
         .find({ patient: id })
-        .populate('doctor patient');
+        .sort({ createdAt: -1 })
+        .populate('doctor patient healthcenter');
+      return diagnosis;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  async getDiagnosisByDoctor(id: string): Promise<DiagnosisI[]> {
+    try {
+      const diagnosis: DiagnosisI[] = await this.diagnosisModel
+        .find({ doctor: id })
+        .sort({ createdAt: -1 })
+        .populate('doctor patient healthcenter');
       return diagnosis;
     } catch (error) {
       throw Error(error);
@@ -43,6 +56,7 @@ export class DiagnosticService {
         medic_recomendation,
         pharmaceutic_recomendation,
         treatment,
+        healthcenter,
       } = diagnosis;
       const newDiagnosis = new this.diagnosisModel({
         type,
@@ -53,6 +67,7 @@ export class DiagnosticService {
         treatment,
         doctor,
         patient,
+        healthcenter,
       });
       await newDiagnosis.save();
       return newDiagnosis;

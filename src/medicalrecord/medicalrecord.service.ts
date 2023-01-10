@@ -89,7 +89,7 @@ export class MedicalrecordService {
     try {
       const founded = await this.medicalRecordModel
         .findOne({ patient: id })
-        .populate('patient');
+        .populate('patient last_update');
       return founded;
     } catch (error) {
       throw Error(error);

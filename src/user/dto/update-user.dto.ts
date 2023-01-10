@@ -7,20 +7,15 @@ import {
   MinLength,
 } from 'class-validator';
 export class updateUserDto {
-  @IsNotEmpty()
   @ApiProperty({ example: 'Juan' })
   first_name: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: 'Perez' })
   last_name: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: '123456' })
   dni: string;
 
-  @IsNotEmpty()
-  @IsEmail()
   @ApiProperty({ example: 'juan@gmail.com' })
   email: string;
 
@@ -50,6 +45,7 @@ export class updateUserDto {
 
   active: boolean;
   is_admin: boolean;
+  is_verified: boolean;
 
   @ApiProperty({
     example: ['Si es medico, aca van los id de sus especialidades (areas)'],

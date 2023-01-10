@@ -69,3 +69,8 @@ export class userDTO {
   @IsNotEmpty()
   role_id: string;
 }
+
+export class AreasArrayDTO {
+  @ApiProperty()
+  areas: string[];
+}

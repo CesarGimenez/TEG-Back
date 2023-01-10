@@ -17,4 +17,8 @@ export interface UserI extends Document {
   pharmacyadmin: string;
   areas: string[];
   role_id: string;
+  mpps_id: string;
+  college_medic_id: string;
+  doctor_signature: string;
+  is_doctor: boolean;
 }
