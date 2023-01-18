@@ -20,7 +20,6 @@ export class PharmacyDTO {
   @ApiProperty({ example: 'Calle 1 con avenida 1' })
   address: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: 'Lara' })
   state: string;
 

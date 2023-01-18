@@ -63,6 +63,15 @@ export class User extends Document {
   @Prop({ default: '' })
   doctor_signature: string;
 
+  @Prop({ default: '' })
+  certidicate: string;
+
+  @Prop({ default: '' })
+  kinship: string;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  family: User;
+
   @Prop({ default: false })
   is_doctor: boolean;
 

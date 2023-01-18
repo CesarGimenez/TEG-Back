@@ -30,7 +30,6 @@ export class userDTO {
   @MaxLength(12)
   password: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: 'Calle los cerezos' })
   address: string;
 

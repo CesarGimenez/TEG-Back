@@ -66,7 +66,6 @@ export class UserController {
   })
   @UseGuards(JwtAuthGuard)
   async getUsersByArea(@Res() res, @Body() body: AreasArrayDTO) {
-    console.log(body);
     const data = await this.userService.getUsersByArea(body);
     return res.status(HttpStatus.OK).json(data);
   }
@@ -109,6 +108,20 @@ export class UserController {
       dni,
     );
     return res.json(user);
+  }
+
+  @Get('/family/:id')
+  @ApiOperation({
+    summary: 'Traerse los detalles de familia de un usuario',
+  })
+  @UseGuards(JwtAuthGuard)
+  async findFamilyByUser(@Res() res, @Param('id') id) {
+    try {
+      const family = await this.userService.findUserFamily(id);
+      return res.json(family);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get('/:id')
@@ -193,9 +206,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async deleteUser(@Res() res, @Param('id') id) {
     const data = await this.userService.deleteUser(id);
-    return res.json({
-      data,
-    });
+    return res.json(data);
   }
 
   @Put('uploadImage/:id')

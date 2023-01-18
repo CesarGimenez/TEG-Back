@@ -22,6 +22,7 @@ export class Disease extends Document {
   @Prop({ required: true })
   transmission: string;
 
+  @Prop({ required: true })
   treatment: string;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Area' }] })

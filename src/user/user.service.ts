@@ -175,10 +175,11 @@ export class UserService {
   }
 
   async updateUser(id: string, body: any): Promise<any> {
-    // const { password } = body;
-    // const hashPassword = await hash(password, 10);
-    // body = { ...body, password: hashPassword };
     try {
+      if (body?.password) {
+        const hashPassword = await hash(body?.password, 10);
+        body = { ...body, password: hashPassword };
+      }
       const user = await this.userModel.findByIdAndUpdate(id, body, {
         new: true,
       });
@@ -206,7 +207,7 @@ export class UserService {
 
   async deleteUser(id: string): Promise<any> {
     const userDeleted = await this.userModel.findByIdAndDelete(id);
-    return { userDeleted };
+    return userDeleted;
   }
 
   async uploadImageUser(image: string, id: string): Promise<any> {
@@ -235,6 +236,13 @@ export class UserService {
       if (dni) query = { ...query, dni };
       const users = await this.userModel.find(query);
       return users;
+    } catch (error) {}
+  }
+
+  async findUserFamily(id: string): Promise<any> {
+    try {
+      const family = await this.userModel.find({ family: id });
+      return family;
     } catch (error) {}
   }
 }
