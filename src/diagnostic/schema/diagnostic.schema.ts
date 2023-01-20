@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Disease } from 'src/disease/schema/disease.schema';
 import { User } from 'src/user/schema/user.schema';
 import { HealthCenter } from 'src/healthcenter/schema/healthcenter.schema';
+import { Area } from 'src/area/schema/area.schema';
 
 export enum DiagnosisType {
   CLINICO = 'Clínico',
@@ -26,6 +27,12 @@ export class Diagnosis extends Document {
   type: DiagnosisType;
 
   @Prop({ required: true })
+  reason: string;
+
+  @Prop({ required: true })
+  physical_exam: string;
+
+  @Prop({ required: true })
   symptoms: string;
 
   @Prop({ required: true })
@@ -42,6 +49,9 @@ export class Diagnosis extends Document {
 
   // @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Disease' }] })
   // diseases: Disease[];
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Area' })
+  area: Area;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   doctor: User;

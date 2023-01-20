@@ -7,6 +7,14 @@ export class DiagnosisDTO {
   type: DiagnosisType;
 
   @IsNotEmpty()
+  @ApiProperty({ example: 'Algun motivo de consulta' })
+  reason: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: 'Examen fisico' })
+  physical_exam: string;
+
+  @IsNotEmpty()
   @ApiProperty({ example: 'Algunos permisos' })
   description: string;
 
@@ -29,6 +37,10 @@ export class DiagnosisDTO {
   // @IsNotEmpty()
   // @ApiProperty({ example: [] })
   // diseases: string[];
+
+  @IsNotEmpty()
+  @ApiProperty({ example: '' })
+  area: string;
 
   @IsNotEmpty()
   @ApiProperty({ example: '' })
