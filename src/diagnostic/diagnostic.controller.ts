@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { PaginationParams } from 'src/pagination';
 import { DiagnosticService } from './diagnostic.service';
 import { DiagnosisDTO } from './dto/diagnostic.dto';
 
@@ -43,9 +45,13 @@ export class DiagnosticController {
   @Get('/patient/:id')
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'id', description: 'id del diagnostico' })
-  async getAllDiagnosisByPatient(@Res() res, @Param('id') id) {
+  async getAllDiagnosisByPatient(
+    @Res() res,
+    @Param('id') id,
+    @Query() { skip, limit }: PaginationParams,
+  ) {
     try {
-      const data = await this.diagnosisService.getDiagnosisByPatient(id);
+      const data = await this.diagnosisService.getDiagnosisByPatient(id, limit);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
       throw Error(error);

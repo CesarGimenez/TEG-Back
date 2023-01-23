@@ -21,13 +21,22 @@ export class DiagnosticService {
     }
   }
 
-  async getDiagnosisByPatient(id: string): Promise<DiagnosisI[]> {
+  async getDiagnosisByPatient(
+    id: string,
+    limit?: number,
+  ): Promise<DiagnosisI[]> {
     try {
-      const diagnosis: DiagnosisI[] = await this.diagnosisModel
+      let diagnosis = await this.diagnosisModel
         .find({ patient: id })
         .sort({ createdAt: -1 })
-        .limit(3)
         .populate('doctor patient healthcenter area');
+      if (limit) {
+        diagnosis = await this.diagnosisModel
+          .find({ patient: id })
+          .sort({ createdAt: -1 })
+          .limit(limit)
+          .populate('doctor patient healthcenter area');
+      }
       return diagnosis;
     } catch (error) {
       throw Error(error);
