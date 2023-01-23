@@ -48,7 +48,7 @@ export class DiagnosticController {
   async getAllDiagnosisByPatient(
     @Res() res,
     @Param('id') id,
-    @Query() { skip, limit }: PaginationParams,
+    @Query() { limit }: PaginationParams,
   ) {
     try {
       const data = await this.diagnosisService.getDiagnosisByPatient(id, limit);
